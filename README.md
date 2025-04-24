@@ -1,11 +1,10 @@
+# Mongoose User Model Backend idea
+
 <img width="1174" alt="image" src="https://github.com/user-attachments/assets/04740be3-afcb-47bd-bb75-9252d3830cfb" />
 
 
 
-ChatGPT said:
-markdown
-Copy
-Edit
+
 # Mongoose User Model
 
 A concise **README.md** for defining and understanding a Mongoose `User` schema in Node.js.
