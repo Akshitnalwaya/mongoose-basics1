@@ -4,7 +4,6 @@
 
 
 
-
 # Mongoose User Model
 
 A concise **README.md** for defining and understanding a Mongoose `User` schema in Node.js.
@@ -12,12 +11,11 @@ A concise **README.md** for defining and understanding a Mongoose `User` schema 
 ## Table of Contents
 
 1. [Overview](#overview)  
-2. [Installation](#installation)  
-3. [Usage](#usage)  
-4. [Schema Definition](#schema-definition)  
-5. [Field Options Explained](#field-options-explained)  
-6. [Why These Patterns?](#why-these-patterns)  
-7. [Interview Questions](#interview-questions)  
+2. [Usage](#usage)  
+3. [Schema Definition](#schema-definition)  
+4. [Field Options Explained](#field-options-explained)  
+5. [Why These Patterns?](#why-these-patterns)  
+6. [Interview Questions](#interview-questions)  
 
 ---
 
@@ -30,17 +28,11 @@ This README covers:
 - **Why** common options and methods are used.  
 - A list of **interview questions** (questions only).
 
-## Installation
+## Usage
 
-```bash
-npm install mongoose
-Usage
-Import Mongoose:
-
-js
-Copy
-Edit
-import mongoose from 'mongoose';
+1. Import Mongoose:
+   ```js
+   import mongoose from 'mongoose';
 Define your schema (see Schema Definition).
 
 Export the model:
