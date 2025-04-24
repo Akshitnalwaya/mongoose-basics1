@@ -1,7 +1,118 @@
-# Simple express demo
+# Mongoose User Model
 
-> Express: fast, unopinionated, minimalist web framework for Node.js
+A concise **README.md** for defining and understanding a Mongoose `User` schema in Node.js.
 
-This project shows a simple express server serving a single HTML page and using `express.static` to serve static files.
+## Table of Contents
 
-Check out the [express documentation](https://expressjs.com/) for more information.
+1. [Overview](#overview)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Schema Definition](#schema-definition)
+5. [Field Options Explained](#field-options-explained)
+6. [Why These Patterns?](#why-these-patterns)
+7. [Interview Questions](#interview-questions)
+
+---
+
+## Overview
+
+This README covers:
+
+- **What** a Mongoose schema is.
+- **How** to define and export a `User` model.
+- **Why** common options and methods are used.
+- A list of **interview questions** (questions only).
+
+## Installation
+
+```bash
+npm install mongoose
+```
+
+## Usage
+
+1. Import Mongoose:
+   ```js
+   import mongoose from 'mongoose';
+   ```
+2. Define your schema (see [Schema Definition](#schema-definition)).
+3. Export the model:
+   ```js
+   export const User = mongoose.model('User', userSchema);
+   ```
+4. Use it in your code:
+   ```js
+   import { User } from './models/User.js';
+   // e.g., const newUser = await User.create({ username, email, password });
+   ```
+
+## Schema Definition
+
+```js
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required']
+    }
+  },
+  {
+    timestamps: true // adds createdAt and updatedAt
+  }
+);
+
+export const User = mongoose.model('User', userSchema);
+```
+
+## Field Options Explained
+
+- **type**: Specifies the JavaScript type (e.g., `String`, `Number`).
+- **required**: Ensures the field must be provided; can include a custom error message.
+- **lowercase**: Converts string input to lowercase before saving.
+- **unique**: Creates a unique index to prevent duplicates (note: not full validation).
+- **timestamps**: Schema option that auto-creates `createdAt` and `updatedAt` fields.
+
+## Why These Patterns?
+
+- **`new mongoose.Schema()`**: Initializes a schema instance with fields and options.
+- **Automatic Pluralization**: `mongoose.model('User', ...)` stores documents in the `users` collection (lowercased, pluralized).
+- **Validation & Indexing**: Combining validation (`required`) and indexing (`unique`) helps enforce data integrity.
+- **Timestamps**: Simplifies tracking document creation and updates without manual fields.
+
+## Interview Questions
+
+1. Why use the `new` keyword when creating a Mongoose schema?
+2. If the model is named `User`, what collection name does Mongoose use, and why?
+3. What is the role of the `type` option in a schema field?
+4. How can you customize the error message for a required field?
+5. What does the `unique` option do, and what are its potential pitfalls?
+6. How does the `lowercase` option affect input data?
+7. What fields are added by setting `{ timestamps: true }`?
+8. What's the difference between instance methods and static methods on a schema?
+9. How do you define virtual fields in Mongoose?
+10. What are pre and post hooks (middleware) in Mongoose, and when might you use them?
+11. How do you handle validation errors programmatically?
+12. How do you create and use indexes in Mongoose schemas?
+13. How do you reference another document (populate) in a schema?
+14. What are discriminators, and when would you use them?
+15. How do you execute a lean query, and why use it?
+16. Can you override the default `_id` field; if so, how?
+
+---
+
+*Document generated on April 24, 2025 (Asia/Kolkata timezone)*
+
