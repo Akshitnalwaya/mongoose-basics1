@@ -2,101 +2,154 @@
 
 <img width="1174" alt="image" src="https://github.com/user-attachments/assets/04740be3-afcb-47bd-bb75-9252d3830cfb" />
 
-# Mongoose User Model
+# Mongoose Schema Examples
 
-A concise **README.md** for defining and understanding a Mongoose `User` schema in Node.js.
+This repository contains examples of Mongoose schemas for a simple ToDo application with user authentication. It demonstrates best practices for data modeling in MongoDB using Mongoose ODM (Object Document Mapper).
 
-## Table of Contents
+## Contents
 
-1. [Overview](#overview)  
-2. [Usage](#usage)  
-3. [Schema Definition](#schema-definition)  
-4. [Field Options Explained](#field-options-explained)  
-5. [Why These Patterns?](#why-these-patterns)  
-6. [Interview Questions](#interview-questions)  
+- User Schema
+- Todo Schema with references
+- Explanations of Mongoose concepts
+- Implementation details
 
----
+## Schema Examples
 
-## Overview
+### User Schema
 
-This README covers:
+```javascript
+import mongoose from "mongoose"
 
-- **What** a Mongoose schema is.  
-- **How** to define and export a `User` model.  
-- **Why** common options and methods are used.  
-- A list of **interview questions** (questions only).
+const userSchema = new mongoose.Schema({
+    // Schema definition goes here
+})
 
-## Usage
+export const User = mongoose.model("User", userSchema)
+```
 
-1. **Import Mongoose:**
+### Todo Schema
 
-   ```js
-   import mongoose from 'mongoose';
+```javascript
+import mongoose from "mongoose";
 
+const todoSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        require: true
+    },
+    complete: {
+        type: Boolean,
+        default: false
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    subTodos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SubTodo"
+    }]
+}, {timestamps: true})
 
-export const User = mongoose.model('User', userSchema);
-export const User = mongoose.model('User', userSchema);
+export const Todo = mongoose.model("Todo", todoSchema)
+```
 
+## Key Concepts Explained
 
+1. **Schema Definition**: A schema defines the structure and properties of documents in MongoDB collections
+2. **Models**: Mongoose models provide an interface to create, read, update, and delete documents
+3. **References**: How to establish relationships between collections using ObjectId references
+4. **Timestamps**: Automatic creation of createdAt and updatedAt fields
+
+## MongoDB Collection Naming Convention
+
+When a schema is exported as a model (e.g., `mongoose.model("User", userSchema)`), Mongoose automatically creates a collection with:
+- Pluralized name
+- All lowercase letters
+
+For example:
+- `User` model → `users` collection
+- `Todo` model → `todos` collection
+
+## Interview Questions
+
+### Basic Mongoose Questions
+
+1. **What is Mongoose and why do we use it with MongoDB?**
+   - Mongoose is an ODM (Object Document Mapper) for MongoDB and Node.js
+   - It provides schema validation, relationship management, and middleware capabilities
+
+2. **Why do we use the `new` keyword when creating a schema?**
+   - The `new` keyword creates an instance of the mongoose.Schema class
+   - It initializes a new schema object with the specified configuration
+
+3. **Explain the difference between Schema and Model in Mongoose.**
+   - Schema: Defines the structure of documents (fields, types, validations)
+   - Model: Provides an interface to interact with a specific MongoDB collection
+
+### Intermediate Questions
+
+4. **How are Mongoose model names converted to MongoDB collection names?**
+   - Model names are automatically pluralized and converted to lowercase
+   - Example: `User` becomes `users`, `TodoItem` becomes `todoitems`
+
+5. **Explain how references work in Mongoose using ObjectId.**
+   - References use MongoDB's ObjectId type to create relationships between documents
+   - The `ref` option specifies which model the ObjectId refers to
+   - References need to be populated explicitly using the `.populate()` method
+
+6. **What is the purpose of the timestamps option in a schema?**
+   - It automatically adds `createdAt` and `updatedAt` fields to documents
+   - These fields are managed by Mongoose and track when documents are created/modified
+
+### Advanced Questions
+
+7. **Describe the difference between embedding and referencing documents in MongoDB.**
+   - Embedding: Nesting documents within each other (faster reads, potential duplication)
+   - Referencing: Using ObjectIds to connect documents (normalized data, separate documents)
+
+8. **How would you implement one-to-many and many-to-many relationships in Mongoose?**
+   - One-to-many: Store array of ObjectIds in the "one" side or reference "one" from "many" side
+   - Many-to-many: Array of ObjectIds on both sides or separate join collection
+
+9. **Explain Mongoose middleware (hooks) and provide use cases.**
+   - Middleware functions run before/after certain operations (save, validate, remove, etc.)
+   - Use cases: Password hashing, validation, logging, updating related documents
+
+10. **How would you handle schema versioning and migrations in a production application?**
+    - Using schema options like `versionKey`
+    - Creating migration scripts with tools like mongoose-migrate
+    - Implementing versioning logic in application code
+
+## Getting Started
+
+To use these schemas:
+
+1. Install dependencies:
+```bash
+npm install mongoose
+```
+
+2. Connect to MongoDB:
+```javascript
+mongoose.connect('mongodb://localhost:27017/your-database')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
+```
+
+3. Import and use your models:
+```javascript
 import { User } from './models/User.js';
+import { Todo } from './models/Todo.js';
 
-// Example:
-const newUser = await User.create({
-  username: 'akshit',
-  email: 'akshit@example.com',
-  password: 'securepassword123'
+// Create a new user
+const newUser = new User({
+  // user properties
 });
 
+await newUser.save();
+```
 
-Field Options Explained
-type: Specifies the JavaScript data type (String, Number, etc.).
+## License
 
-required: Ensures the field is mandatory; supports custom error messages.
-
-lowercase: Automatically converts the input string to lowercase.
-
-unique: Creates a unique index to prevent duplicates (note: not full validation).
-
-timestamps: Automatically adds createdAt and updatedAt fields to documents.
-
-Why These Patterns?
-new mongoose.Schema(): Creates a schema instance with defined structure and options.
-
-Automatic Collection Naming: mongoose.model('User', ...) stores documents in the users collection (lowercased and pluralized).
-
-Validation + Indexing: Enforces input rules (required) and prevents duplication (unique).
-
-Timestamps: Simplifies creation/update time tracking with no extra coding.
-
-Interview Questions
-Why use the new keyword when creating a Mongoose schema?
-
-If the model is named User, what collection name does Mongoose use, and why?
-
-What is the role of the type option in a schema field?
-
-How can you customize the error message for a required field?
-
-What does the unique option do, and what are its potential pitfalls?
-
-How does the lowercase option affect input data?
-
-What fields are added by setting { timestamps: true }?
-
-What's the difference between instance methods and static methods on a schema?
-
-How do you define virtual fields in Mongoose?
-
-What are pre and post hooks (middleware) in Mongoose, and when might you use them?
-
-How do you handle validation errors programmatically?
-
-How do you create and use indexes in Mongoose schemas?
-
-How do you reference another document (populate) in a schema?
-
-What are discriminators, and when would you use them?
-
-How do you execute a lean query, and why use it?
-
-Can you override the default _id field; if so, how?
+MIT
